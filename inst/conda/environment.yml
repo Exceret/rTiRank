@@ -1,0 +1,49 @@
+name: r-reticulate-tirank
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - python=3.9
+  - pip
+  
+  # Core with safety bounds
+  - numpy>=1.22,<2.0
+  - pandas>=1.5
+  - scipy>=1.8
+  - scikit-learn>=1.0
+  - statsmodels>=0.14
+  - openpyxl
+  
+  # Deep Learning
+  - pytorch>=2.1
+  - torchvision
+  - timm==0.5.4
+  
+  # Bioinformatics
+  - scanpy>=1.9
+  - leidenalg
+  - gseapy>=1.0
+  - lifelines>=0.27
+  - imbalanced-learn>=0.11
+  
+  # Visualization
+  - matplotlib>=3.7
+  - seaborn>=0.12
+  - pillow>=9.0
+  
+  # Optimization & Web
+  - optuna>=3.4
+  - dash>=2.14
+  - dash-bootstrap-components
+  - click
+  
+  # Workflow
+  - snakemake=7.32.4  # Kept strict per reviewer request to use specific version for reproducible workflows
+  - pulp<2.8
+
+  - pip:
+    - -e .

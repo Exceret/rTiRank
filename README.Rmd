@@ -1,12 +1,21 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
 # TiRank
 
 This is the R package fork of TiRank, as an extension for [SigBridgeR](https://github.com/WangLabCSU/SigBridgeR).
-
-To install
-
-```r
-pak::pkg_install("Exceret/rTiRank")
-```
 
 <img src="./docs/source/_static/TiRank_white.png" alt="TiRank Logo" width="50%" />
 
