@@ -2,6 +2,10 @@
 
 This is the R package fork of TiRank, as an extension for [SigBridgeR](https://github.com/WangLabCSU/SigBridgeR).
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svghttps://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svghttps://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 To install
 
 ```r

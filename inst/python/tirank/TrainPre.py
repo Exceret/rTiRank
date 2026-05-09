@@ -17,6 +17,7 @@ from .Loss import *
 from .Model import TiRankModel
 from .Visualization import plot_loss
 from .Dataloader import transform_test_exp
+from .ts_print import ts_print
 
 # Training
 """
@@ -41,7 +42,7 @@ def Train_one_epoch(
     optimizer=None,
     alphas=[1, 1, 1, 1],
     device="cpu",
-    epoch=0
+    epoch=0,
 ):
     """
     Performs a single training epoch for the TiRank multi-task model.
@@ -121,14 +122,14 @@ def Train_one_epoch(
         embeddings_b, _, pred_patho = model(X_b)
 
         regularization_loss_ = regularization_loss(model.feature_weights)
-        mmd_loss_ = mmd_loss(embeddings_a,embeddings_b)
+        mmd_loss_ = mmd_loss(embeddings_a, embeddings_b)
 
         # Calculate loss
         if mode == "Cox":
             bulk_loss_ = cox_loss(risk_scores_a, t, e)
 
-            #lambda_proto = min(0.1 * (epoch / 10), 0.1) if epoch > 150 else 0
-            #proto_loss = prototype_loss(embeddings_b, embeddings_a, e) # Prototype loss
+            # lambda_proto = min(0.1 * (epoch / 10), 0.1) if epoch > 150 else 0
+            # proto_loss = prototype_loss(embeddings_b, embeddings_a, e) # Prototype loss
 
         elif mode == "Classification":
             bulk_loss_ = CrossEntropy_loss(risk_scores_a, label)
@@ -171,7 +172,6 @@ def Train_one_epoch(
                 + cosine_loss_exp_ * alphas[2]
                 + cosine_loss_spatial_ * alphas[3]
                 + mmd_loss_ * 1
-
             )
 
             # other_loss = (
@@ -193,7 +193,6 @@ def Train_one_epoch(
                 + cosine_loss_exp_ * alphas[2]
                 + pathoLloss * alphas[3]
                 + mmd_loss_ * 1
-
             )
 
             # other_loss = (
@@ -210,11 +209,11 @@ def Train_one_epoch(
         #   total_loss = other_loss + lambda_proto * proto_loss
 
         # Backward pass and optimization
-        optimizer.zero_grad() # Zero the parameter gradients
+        optimizer.zero_grad()  # Zero the parameter gradients
         total_loss.backward()
         optimizer.step()
 
-        #total_loss_all += other_loss.item() + proto_loss.item()
+        # total_loss_all += other_loss.item() + proto_loss.item()
         total_loss_all += total_loss.item()
         regularization_loss_all += regularization_loss_.item()
         bulk_loss_all += bulk_loss_.item()
@@ -317,7 +316,7 @@ def Validate_model(
             # Please adapt if your validation conditions differ from the training
 
             # MMD loss
-            mmd_loss_ = mmd_loss(embeddings_a,embeddings_b)
+            mmd_loss_ = mmd_loss(embeddings_a, embeddings_b)
 
             # Bulk loss
             if mode == "Cox":
@@ -397,8 +396,9 @@ def Reject_With_GMM_Bio(pred_bulk, pred_sc, tolerance, min_components, max_compo
             to be rejected (phenotype-independent) and 0 indicates a cell
             to be kept.
     """
-    print(
-        f"Perform Rejection with GMM mode with tolerance={tolerance}, components=[{min_components},{max_components}]!"
+    ts_print(
+        f"Perform Rejection with GMM mode with tolerance={tolerance}, \
+            components=[{min_components},{max_components}]!", symbol = "info"
     )
 
     gmm_bulk = GaussianMixture(n_components=2, random_state=619).fit(pred_bulk)
@@ -452,7 +452,7 @@ def Reject_With_GMM_Bio(pred_bulk, pred_sc, tolerance, min_components, max_compo
             mask[np.isin(labels_sc, remain_component)] = 0
 
             print(
-                f"Reject {int(sum(mask))}({int(sum(mask))*100 / len(mask) :.2f}%) cells."
+                f"Reject {int(sum(mask))}({int(sum(mask)) * 100 / len(mask):.2f}%) cells."
             )
 
             return mask
@@ -507,7 +507,7 @@ def Reject_With_GMM_Bio(pred_bulk, pred_sc, tolerance, min_components, max_compo
             mask[np.isin(labels_sc, remain_component)] = 0
 
             print(
-                f"Reject {int(sum(mask))}({int(sum(mask))*100 / len(mask) :.2f}%) cells."
+                f"Reject {int(sum(mask))}({int(sum(mask)) * 100 / len(mask):.2f}%) cells."
             )
 
             return mask
@@ -561,7 +561,7 @@ def Reject_With_GMM_Reg(pred_bulk, pred_sc, tolerance):
         mask = np.ones(shape=(len(pred_sc), 1))
         mask[(pred_sc >= lower_bound) & (pred_sc <= upper_bound)] = 0
 
-    print(f"Reject {int(sum(mask))}({int(sum(mask))*100 / len(mask) :.2f}%) cells.")
+    print(f"Reject {int(sum(mask))}({int(sum(mask)) * 100 / len(mask):.2f}%) cells.")
 
     return mask
 
@@ -616,14 +616,14 @@ def Reject_With_StrictNumber(pred_bulk, pred_sc, tolerance):
         f"For the first Gaussian distribution with mean {gmm_bulk_mean_1} and std {gmm_bulk_std_1}:"
     )
     print(
-        f"The range around the mean that contains {tolerance*100}% of the samples is approximately from {range_low_1} to {range_high_1}"
+        f"The range around the mean that contains {tolerance * 100}% of the samples is approximately from {range_low_1} to {range_high_1}"
     )
 
     print(
         f"For the second Gaussian distribution with mean {gmm_bulk_mean_0} and std {gmm_bulk_std_0}:"
     )
     print(
-        f"The range around the mean that contains {tolerance*100}% of the samples is approximately from {range_low_0} to {range_high_0}"
+        f"The range around the mean that contains {tolerance * 100}% of the samples is approximately from {range_low_0} to {range_high_0}"
     )
 
     mask = np.ones(shape=(len(pred_sc), 1))
@@ -634,7 +634,7 @@ def Reject_With_StrictNumber(pred_bulk, pred_sc, tolerance):
     # Set mask to zero where the condition for the second Gaussian distribution is met
     mask[(pred_sc >= range_low_0) & (pred_sc <= range_high_0)] = 0
 
-    print(f"Reject {int(sum(mask))}({int(sum(mask))*100 / len(mask) :.2f}%) cells.")
+    print(f"Reject {int(sum(mask))}({int(sum(mask)) * 100 / len(mask):.2f}%) cells.")
 
     return mask
 
@@ -699,17 +699,37 @@ def objective(
     model.apply(model.init_weights)
 
     # Define hyperparameters with trial object
-    lr_choices = [2e-3,1e-3, 8e-4, 6e-4, 4e-4, 2e-4, 1e-4]
+    lr_choices = [2e-3, 1e-3, 8e-4, 6e-4, 4e-4, 2e-4, 1e-4]
     lr = trial.suggest_categorical("lr", lr_choices)
 
-    n_epochs_choices = [500,525,550,575,600]
+    n_epochs_choices = [500, 525, 550, 575, 600]
     n_epochs = trial.suggest_categorical("n_epochs", n_epochs_choices)
 
     # Define alpha values as specific choices
     alpha_0_choices = [1]
     alpha_1_choices = [1, 0.95, 0.9, 1.05, 1.1, 1.15, 1.2, 0.9, 0.85]
-    alpha_2_choices = [1e-1, 0.95e-1, 0.9e-1, 1.05e-1, 1.1e-1, 1.15e-1, 1.2e-1, 0.9e-1, 0.85e-1]
-    alpha_3_choices = [1e-1, 0.95e-1, 0.9e-1, 1.05e-1, 1.1e-1, 1.15e-1, 1.2e-1, 0.9e-1, 0.85e-1]
+    alpha_2_choices = [
+        1e-1,
+        0.95e-1,
+        0.9e-1,
+        1.05e-1,
+        1.1e-1,
+        1.15e-1,
+        1.2e-1,
+        0.9e-1,
+        0.85e-1,
+    ]
+    alpha_3_choices = [
+        1e-1,
+        0.95e-1,
+        0.9e-1,
+        1.05e-1,
+        1.1e-1,
+        1.15e-1,
+        1.2e-1,
+        0.9e-1,
+        0.85e-1,
+    ]
 
     # Suggest categorical choices for each alpha
     alphas = [
@@ -803,7 +823,7 @@ def tune_hyperparameters(
         device (str, optional): The compute device. Defaults to "cpu".
         n_trials (int, optional): The number of Optuna trials to run.
             Defaults to 50.
-    
+
     Returns:
         None
     """
@@ -886,7 +906,7 @@ def tune_hyperparameters(
     # save the best hyperparameters
     best_params = study.best_trial.params
     with open(os.path.join(savePath_3, "best_params.pkl"), "wb") as f:
-        print("Best hyperparameters:", best_params)
+        ts_print(f"Best hyperparameters: {best_params}", symbol="info")
         pickle.dump(best_params, f)  ## bet parameters set
     f.close()
 
@@ -908,7 +928,7 @@ def get_best_model(savePath):
     Returns:
         TiRankModel: The trained TiRank model with the best weights loaded.
     """
-    print("Loading the Best Model.")
+    ts_print("Loading the Best Model", symbol="info")
     savePath_3 = os.path.join(savePath, "3_Analysis")
     model_save_path = os.path.join(savePath_3, "checkpoints")
 
@@ -987,7 +1007,7 @@ def Predict(savePath, mode, do_reject=True, tolerance=0.05, reject_mode="GMM"):
             method. Defaults to 0.05.
         reject_mode (str, optional): The rejection method to use ('GMM' or 'Strict').
             Defaults to "GMM".
-    
+
     Returns:
         None
     """
@@ -997,7 +1017,7 @@ def Predict(savePath, mode, do_reject=True, tolerance=0.05, reject_mode="GMM"):
 
     model = get_best_model(savePath)
 
-    print("Starting Inference.")
+    ts_print("Starting Inference.", symbol = "info")
 
     # Load data
     ### Training bulk set
@@ -1108,7 +1128,7 @@ def Predict(savePath, mode, do_reject=True, tolerance=0.05, reject_mode="GMM"):
     saveDF_bulk.columns = colnames
     saveDF_bulk.index = bulk_rownames
 
-    print("Inference Done.")
+    ts_print("Inference Done.", symbol="success")
 
     with open(os.path.join(savePath_3, "saveDF_bulk.pkl"), "wb") as f:
         pickle.dump(saveDF_bulk, f)
@@ -1132,7 +1152,9 @@ def Predict(savePath, mode, do_reject=True, tolerance=0.05, reject_mode="GMM"):
             for i in temp
         ]
 
-        print(f"We set Rank score < 0.5 as Rank- () while > 0.5 as Rank+ ")
+        ts_print(
+            "We set Rank score < 0.5 as Rank- while > 0.5 as Rank+ ", symbol="info"
+        )
 
     if mode == "Regression":
         scAnndata.obs["Rank_Label"] = scAnndata.obs["Rank_Score"] * (
@@ -1307,10 +1329,13 @@ def Pcluster(savePath, clusterColName, perm_n=1001):
     print(category_dict)
 
     # Save Category
-    with open(os.path.join(savePath_3, f"{clusterColName}_category_dict.json"), "w") as json_file:
-        json.dump(category_dict, json_file, indent=4)   
+    with open(
+        os.path.join(savePath_3, f"{clusterColName}_category_dict.json"), "w"
+    ) as json_file:
+        json.dump(category_dict, json_file, indent=4)
 
     return None
+
 
 def IdenHub(savePath, cateCol1, cateCol2, min_spots):
     """
@@ -1343,20 +1368,26 @@ def IdenHub(savePath, cateCol1, cateCol2, min_spots):
         raise ValueError(f"{cateCol1} was not in prediction datafrane.")
     if cateCol2 not in pred_df.columns:
         raise ValueError(f"{cateCol2} was not in prediction datafrane.")
-    
+
     # Conbime the categorys
-    cate1 = pred_df[cateCol1].tolist()   
+    cate1 = pred_df[cateCol1].tolist()
     cate2 = pred_df[cateCol2].tolist()
 
-    pred_df["combine_cluster"] = [str(cate1[i]) + "_" + str(cate2[i]) for i in range(len(cate1))]
+    pred_df["combine_cluster"] = [
+        str(cate1[i]) + "_" + str(cate2[i]) for i in range(len(cate1))
+    ]
 
     # Identify categories with counts less than the threshold
-    category_counts = pred_df['combine_cluster'].value_counts()
+    category_counts = pred_df["combine_cluster"].value_counts()
     categories_to_replace = category_counts[category_counts < min_spots].index.tolist()
-    print("\nCategories with counts less than {}: {}".format(min_spots, categories_to_replace))
+    ts_print(
+        "\nCategories with counts less than {min_spots}: {categories_to_replace}",symbol = "info"
+    )
 
-    pred_df['combine_cluster'] = pred_df['combine_cluster'].replace(categories_to_replace, 'NA')
-    pred_df["combine_cluster"] = pred_df["combine_cluster"].astype('category')
+    pred_df["combine_cluster"] = pred_df["combine_cluster"].replace(
+        categories_to_replace, "NA"
+    )
+    pred_df["combine_cluster"] = pred_df["combine_cluster"].astype("category")
 
     pred_df.to_csv(os.path.join(savePath_3, "spot_predict_score.csv"))
 

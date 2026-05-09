@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(TiRank)
+library(rTiRank)
 
-test_check("TiRank")
+test_check("rTiRank")

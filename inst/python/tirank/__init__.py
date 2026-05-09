@@ -15,15 +15,15 @@ from .tirank_cli import *
 
 # Define an __all__ list that specifies all the modules you want to be imported when 'from TiRank import *' is used
 __all__ = [
-    'Dataloader', 
-    'GPextractor', 
-    'Imageprocessing', 
-    'LoadData', 
-    'Loss', 
-    'Model', 
-    'SCSTpreprocess', 
-    'TrainPre', 
-    'Visualization',
-    'main',
-    'tirank_cli'
+    "Dataloader",
+    "GPextractor",
+    "Imageprocessing",
+    "LoadData",
+    "Loss",
+    "Model",
+    "SCSTpreprocess",
+    "TrainPre",
+    "Visualization",
+    "main",
+    "tirank_cli",
 ]

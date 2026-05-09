@@ -22,7 +22,7 @@ from tirank.Visualization import plot_score_umap, plot_label_distribution_among_
 
 # Set random seed for reproducibility
 setup_seed(619)
-
+  
 # --------------------------------------------
 # 1. Load Data
 # --------------------------------------------

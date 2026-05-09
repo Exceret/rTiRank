@@ -15,7 +15,18 @@ knitr::opts_chunk$set(
 
 # TiRank
 
+  <!-- badges: start -->
+  [![R-CMD-check](https://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svghttps://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svghttps://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
 This is the R package fork of TiRank, as an extension for [SigBridgeR](https://github.com/WangLabCSU/SigBridgeR).
+
+To install
+
+```r
+pak::pkg_install("Exceret/rTiRank")
+```
+
 
 <img src="./docs/source/_static/TiRank_white.png" alt="TiRank Logo" width="50%" />
 

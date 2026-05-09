@@ -6,10 +6,11 @@ import os, pickle
 
 from lifelines import CoxPHFitter
 from scipy.stats import pearsonr, ttest_ind
-from statsmodels.stats.multitest import multipletests
+# from statsmodels.stats.multitest import multipletests
 
 from .Dataloader import transform_test_exp
 from .Visualization import plot_genepair
+from .ts_print import ts_print
 
 """
 Gene Pair Extractor module for TiRank.
@@ -21,6 +22,7 @@ filters them, and then applies this transformation to both bulk and
 single-cell/spatial data.
 """
 
+
 class GenePairExtractor:
     """
     A class to extract and filter phenotype-associated gene pairs (PGPs).
@@ -30,7 +32,7 @@ class GenePairExtractor:
     creates all possible pairs between positive and negative-associated genes,
     filters these pairs based on co-occurrence and variance, and finally
     transforms both bulk and sc/st datasets into gene pair matrices.
-    
+
     Args:
         savePath (str): The main project directory path.
         analysis_mode (str): The analysis mode ('Classification', 'Cox', 'Regression').
@@ -46,6 +48,7 @@ class GenePairExtractor:
         min_cutoff (float, optional): Minimum co-occurrence proportion for filtering
             gene pairs (removes pairs with no co-occurrence). Defaults to 0.2.
     """
+
     def __init__(
         self,
         savePath,
@@ -67,14 +70,14 @@ class GenePairExtractor:
     def load_data(self):
         """
         Loads the required expression and clinical data from disk.
-        
+
         Loads 'bulkExp_train.pkl', 'bulkClinical_train.pkl', and 'scAnndata.pkl'
         from the '2_preprocessing' directory and stores them as attributes.
-        
+
         Returns:
             None
         """
-        print(f"Starting load data for gene pair transformation.")
+        ts_print("Starting load data for gene pair transformation", symbol="info")
         savePath_2 = os.path.join(self.savePath, "2_preprocessing")
         savePath_splitData = os.path.join(savePath_2, "split_data")
 
@@ -105,16 +108,16 @@ class GenePairExtractor:
     def save_data(self):
         """
         Saves the generated gene pair matrices to disk.
-        
+
         Saves 'train_bulk_gene_pairs_mat.pkl', 'val_bulkExp_gene_pairs_mat.pkl',
         and 'sc_gene_pairs_mat.pkl' to the '2_preprocessing' directory.
         The validation matrix is created by transforming the validation
         expression data using the training gene pairs.
-        
+
         Returns:
             None
         """
-        print(f"Starting save gene pair matrices.")
+        ts_print("Starting save gene pair matrices", symbol="info")
         savePath_2 = os.path.join(self.savePath, "2_preprocessing")
         savePath_splitData = os.path.join(savePath_2, "split_data")
 
@@ -144,14 +147,14 @@ class GenePairExtractor:
         with open(os.path.join(savePath_2, "sc_gene_pairs_mat.pkl"), "wb") as f:
             pickle.dump(sc_gene_pairs_mat, f)  ## single cell gene pair matrix
         f.close()
-        print(f"Save gene pair matrices done.")
+        ts_print("Save gene pair matrices done", symbol="success")
 
         return None
 
     def run_extraction(self):
         """
         Main orchestration function to run the full gene pair extraction pipeline.
-        
+
         This function performs the following steps:
         1. Finds intersecting genes between bulk and sc/st data.
         2. Selects top variable genes from sc/st data.
@@ -162,11 +165,11 @@ class GenePairExtractor:
         6. Filters the gene pair matrix by co-occurrence and variance.
         7. Transforms the sc/st expression data using the filtered gene pairs.
         8. Saves the final matrices as attributes and plots them.
-        
+
         Returns:
             None
         """
-        print(f"Starting gene pair extraction.")
+        ts_print("Starting gene pair extraction", symbol="info")
 
         # Find the intersection of genes in bulk and single-cell datasets
         intersect_genes = np.intersect1d(
@@ -188,27 +191,33 @@ class GenePairExtractor:
             self.extract_candidate_genes(top_variable_genes)
         )
 
-        print(f"Get candidate genes done.")
+        ts_print("Get candidate genes done", symbol="info")
 
         # Obtain the list of candidate genes
         if self.analysis_mode == "Classification":
             regulated_genes_r, regulated_genes_p = self.calculate_binomial_gene_pairs()
-            print(
-                f"There are {len(regulated_genes_r)} genes up-regulated in Group 0 and {len(regulated_genes_p)} genes up-regulated in Group 1."
+            ts_print(
+                f"There are {len(regulated_genes_r)} genes up-regulated in Group 0 \
+                    and {len(regulated_genes_p)} genes up-regulated in Group 1.",
+                symbol="info",
             )
 
         elif self.analysis_mode == "Cox":
             regulated_genes_r, regulated_genes_p = self.calculate_survival_gene_pairs()
-            print(
-                f"There are {len(regulated_genes_r)} Risk genes and {len(regulated_genes_p)} Protective genes."
+            ts_print(
+                f"There are {len(regulated_genes_r)} Risk genes \
+                    and {len(regulated_genes_p)} Protective genes.",
+                symbol="info",
             )
 
         elif self.analysis_mode == "Regression":
             regulated_genes_r, regulated_genes_p = (
                 self.calculate_regression_gene_pairs()
             )
-            print(
-                f"There are {len(regulated_genes_r)} positive-associated genes and {len(regulated_genes_p)} negative-associated genes."
+            ts_print(
+                f"There are {len(regulated_genes_r)} positive-associated genes \
+                    and {len(regulated_genes_p)} negative-associated genes.",
+                symbol="info",
             )
 
         else:
@@ -219,7 +228,7 @@ class GenePairExtractor:
                 "A set of genes is empty. Try increasing the 'top_var_genes' value or loosening the 'p.value' threshold."
             )
 
-        print(f"Get candidate gene pairs done.")
+        ts_print("Get candidate gene pairs done.", symbol="success")
 
         # Transform the bulk gene pairs
         bulk_gene_pairs = self.transform_bulk_gene_pairs(
@@ -233,7 +242,7 @@ class GenePairExtractor:
             bulk_gene_pairs_mat
         )
 
-        print(f"Profile transformation done.")
+        ts_print("Profile transformation done.", symbol="success")
 
         # Return the bulk and single-cell gene pairs
         self.bulk_gene_pairs_mat = bulk_gene_pairs_mat
@@ -248,7 +257,7 @@ class GenePairExtractor:
     def extract_candidate_genes(self, gene_names):
         """
         Subsets the expression matrices to a list of candidate genes.
-        
+
         Args:
             gene_names (list): A list of gene names to keep.
 
@@ -271,9 +280,9 @@ class GenePairExtractor:
     def calculate_binomial_gene_pairs(self):
         """
         Finds phenotype-associated genes for 'Classification' mode.
-        
+
         Performs a t-test for each gene between two groups in the clinical data.
-        
+
         Returns:
             tuple: A tuple containing:
                 - list: Genes up-regulated in group 0 (t-stat > 0).
@@ -321,9 +330,9 @@ class GenePairExtractor:
     def calculate_survival_gene_pairs(self):
         """
         Finds phenotype-associated genes for 'Cox' survival mode.
-        
+
         Performs a univariate Cox proportional hazards model for each gene.
-        
+
         Returns:
             tuple: A tuple containing:
                 - list: Risk genes (Hazard Ratio > 1).
@@ -374,10 +383,10 @@ class GenePairExtractor:
     def calculate_regression_gene_pairs(self):
         """
         Finds phenotype-associated genes for 'Regression' mode.
-        
+
         Performs a Pearson correlation for each gene against the continuous
         clinical variable.
-        
+
         Returns:
             tuple: A tuple containing:
                 - list: Positively correlated genes.
@@ -434,7 +443,7 @@ class GenePairExtractor:
     def transform_bulk_gene_pairs(self, genes_r, genes_p):
         """
         Transforms the bulk expression matrix into a gene pair matrix (REO).
-        
+
         Creates all possible pairs between the two gene sets (e.g., risk/protective).
         A pair is 1 if gene_r > gene_p, else -1.
 
@@ -490,7 +499,7 @@ class GenePairExtractor:
     def transform_single_cell_gene_pairs(self, bulk_GPMat):
         """
         Transforms the sc/st expression matrix into a gene pair matrix.
-        
+
         Uses the *exact* same gene pairs that were filtered from the bulk data.
 
         Args:

@@ -399,8 +399,9 @@ def plot_label_distribution_among_conditions(savePath, group):
 
     return None
 
+
 # Spatial Hub map (For ST only)
-def plot_STmap(savePath,group):
+def plot_STmap(savePath, group):
     """Generates a composite spatial map for ST data showing cluster hubs.
 
     This function is for Spatial Transcriptomics (ST) data. It loads
@@ -439,7 +440,7 @@ def plot_STmap(savePath,group):
         raise ValueError("Invalid grouping condition selected")
 
     ## Load p-cluster results
-    with open(os.path.join(savePath_3,f"{group}_category_dict.json"), 'r') as file:
+    with open(os.path.join(savePath_3, f"{group}_category_dict.json"), "r") as file:
         categories_ = json.load(file)
 
     ## Assign new label
@@ -453,7 +454,7 @@ def plot_STmap(savePath,group):
         else:
             new_RankLabel.append("Background")
     sc_PredDF["new_Rank_Label"] = new_RankLabel
-    sc_PredDF["new_Rank_Label"] = sc_PredDF["new_Rank_Label"].astype('category')
+    sc_PredDF["new_Rank_Label"] = sc_PredDF["new_Rank_Label"].astype("category")
 
     ## Load scAnndata
     f = open(os.path.join(savePath_2, "scAnndata.pkl"), "rb")
@@ -463,53 +464,53 @@ def plot_STmap(savePath,group):
 
     ## Color bar
     label_color_map = {
-            "Rank+": "#DE6E66",
-            "Rank-": "#5096DE",
-            "Background": "lightgrey",
+        "Rank+": "#DE6E66",
+        "Rank-": "#5096DE",
+        "Background": "lightgrey",
     }
-    
+
     # Plot and save
     fig, axs = plt.subplots(1, 3, figsize=(18, 6))  # Adjust figsize as needed
 
     ## Plot 1: Category Labels Without the HE Image
     sc.pl.spatial(
-    scAnndata,
-    color=group,       # Your categorical column
-    img_key=None,       # No background image
-    alpha_img=0.0,      # No background image opacity
-    #spot_size=5,       # Adjust spot size
-    show=False,         # Do not display immediately
-    #frameon=False,
-    ax=axs[0]           # Plot on the first subplot
+        scAnndata,
+        color=group,  # Your categorical column
+        img_key=None,  # No background image
+        alpha_img=0.0,  # No background image opacity
+        # spot_size=5,       # Adjust spot size
+        show=False,  # Do not display immediately
+        # frameon=False,
+        ax=axs[0],  # Plot on the first subplot
     )
     ## Plot 2: Only the HE Image
     sc.pl.spatial(
         scAnndata,
-        img_key='hires',   # Your image key (e.g., 'hires' or 'lowres')
-        color=None,         # No data overlay
-        alpha_img=1.0,      # Full opacity
-        spot_size=0,        # No spots plotted
-        show=False,         # Do not display immediately
-        ax=axs[1]           # Plot on the second subplot
+        img_key="hires",  # Your image key (e.g., 'hires' or 'lowres')
+        color=None,  # No data overlay
+        alpha_img=1.0,  # Full opacity
+        spot_size=0,  # No spots plotted
+        show=False,  # Do not display immediately
+        ax=axs[1],  # Plot on the second subplot
     )
 
     ## Plot 3: HE Image with Category Labels
     sc.pl.spatial(
         scAnndata,
-        color="new_Rank_Label",       # Your categorical column
-        img_key='hires',   # Your image key
-        alpha_img=0.25,      # Full opacity for background image
-        #spot_size=5,       # Adjust spot size
+        color="new_Rank_Label",  # Your categorical column
+        img_key="hires",  # Your image key
+        alpha_img=0.25,  # Full opacity for background image
+        # spot_size=5,       # Adjust spot size
         palette=label_color_map,
-        show=False,         # Do not display immediately
-        ax=axs[2]           # Plot on the third subplot
+        show=False,  # Do not display immediately
+        ax=axs[2],  # Plot on the third subplot
     )
     plt.tight_layout()
     plt.savefig(
-            os.path.join(savePath_3, "Spatial of TiRank Hubs.png"),
-            bbox_inches="tight",
-            pad_inches=1,
-        )
+        os.path.join(savePath_3, "Spatial of TiRank Hubs.png"),
+        bbox_inches="tight",
+        pad_inches=1,
+    )
     plt.show()
     plt.close()
 
@@ -1043,6 +1044,7 @@ def create_comparison_density_plot(data1, label1, data2, label2, ax, title):
     ax.set_title(title)
     ax.legend()
 
+
 def plot_genepair(df, data_type, savePath=None):
     """Plots and saves a clustered heatmap of a gene-pair matrix.
 
@@ -1100,7 +1102,7 @@ def plot_genepair(df, data_type, savePath=None):
     plt.savefig(
         os.path.join(savePath_2, data_type + " gene pair heatmap.png"),
         bbox_inches="tight",
-        pad_inches=0.1
+        pad_inches=0.1,
     )
     plt.close()
 

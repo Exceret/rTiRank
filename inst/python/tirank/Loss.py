@@ -10,6 +10,7 @@ learning framework, including Cox loss for survival, cosine similarity loss
 for spatial regularization, MMD loss, and standard classification/regression losses.
 """
 
+
 def regularization_loss(feature_weights):
     """
     Calculates the L1 regularization loss (mean absolute value) for a weight matrix.
@@ -23,10 +24,11 @@ def regularization_loss(feature_weights):
     """
     return torch.mean(torch.abs(feature_weights))
 
+
 def cox_loss(pred, t, e, margin=0.1):
     """
     Calculates the Cox partial log-likelihood loss for survival analysis.
-    
+
     This implementation uses a pairwise comparison approach with a margin.
 
     Args:
@@ -41,7 +43,7 @@ def cox_loss(pred, t, e, margin=0.1):
         torch.Tensor: The scalar Cox partial log-likelihood loss.
     """
     assert len(pred) == len(t) == len(e)
-    
+
     # Compute pairwise differences between predictions
     pred_diffs = pred.unsqueeze(1) - pred.unsqueeze(0)
 
@@ -101,7 +103,8 @@ def cosine_loss(embeddings, A, weight_connected=1.0, weight_unconnected=0.1):
     loss = torch.mean(weights * torch.abs(B - A_scaled))
     return loss
 
-def gaussian_kernel(a, b, sigma = 1.0):
+
+def gaussian_kernel(a, b, sigma=1.0):
     """
     Calculates the Gaussian (RBF) kernel similarity between two tensors.
 
@@ -120,11 +123,11 @@ def gaussian_kernel(a, b, sigma = 1.0):
     b = b.view(1, dim1_2, depth)
     a_core = a.expand(dim1_1, dim1_2, depth)
     b_core = b.expand(dim1_1, dim1_2, depth)
-    numerator = (a_core - b_core).pow(2).sum(2) / (sigma ** 2)
+    numerator = (a_core - b_core).pow(2).sum(2) / (sigma**2)
     return torch.exp(-numerator)
 
 
-def mmd_loss(embeddings_A, embeddings_B, sigma = 1.0):
+def mmd_loss(embeddings_A, embeddings_B, sigma=1.0):
     """
     Calculates the Maximum Mean Discrepancy (MMD) loss.
 
@@ -143,7 +146,9 @@ def mmd_loss(embeddings_A, embeddings_B, sigma = 1.0):
     kernel_matrix_A = gaussian_kernel(embeddings_A, embeddings_A, sigma)
     kernel_matrix_B = gaussian_kernel(embeddings_B, embeddings_B, sigma)
     kernel_matrix_AB = gaussian_kernel(embeddings_A, embeddings_B, sigma)
-    mmd_loss_ = kernel_matrix_A.mean() + kernel_matrix_B.mean() - 2 * kernel_matrix_AB.mean()
+    mmd_loss_ = (
+        kernel_matrix_A.mean() + kernel_matrix_B.mean() - 2 * kernel_matrix_AB.mean()
+    )
 
     return mmd_loss_
 
@@ -190,7 +195,10 @@ def MSE_loss(y_pred, y_true):
 
     return loss
 
-def prototype_loss(cell_embeddings, bulk_embeddings, bulk_labels, threshold=0.1, margin=1.0):
+
+def prototype_loss(
+    cell_embeddings, bulk_embeddings, bulk_labels, threshold=0.1, margin=1.0
+):
     """
     Calculates a prototype-based contrastive loss.
 
@@ -214,23 +222,23 @@ def prototype_loss(cell_embeddings, bulk_embeddings, bulk_labels, threshold=0.1,
     # Compute prototypes from bulk RNA-seq data using class indices
     rank_plus_proto = bulk_embeddings[bulk_labels == 0].mean(dim=0)  # 0 for 'Rank+'
     rank_minus_proto = bulk_embeddings[bulk_labels == 1].mean(dim=0)  # 1 for 'Rank-'
-    
+
     # Compute distances for single-cell embeddings to both prototypes
     dist_to_plus = torch.norm(cell_embeddings - rank_plus_proto, dim=1)
     dist_to_minus = torch.norm(cell_embeddings - rank_minus_proto, dim=1)
-    
+
     # Confidence: difference in distances
     confidence = torch.abs(dist_to_plus - dist_to_minus)
     mask = (confidence > threshold).float()  # Only use confident cells
-    
+
     # Pseudo-labels for single-cell data: 0 if closer to Rank+, 1 if closer to Rank-
     pseudo_labels = (dist_to_plus < dist_to_minus).long()
-    
+
     # Contrastive distances
     correct_dist = torch.where(pseudo_labels == 0, dist_to_plus, dist_to_minus)
     incorrect_dist = torch.where(pseudo_labels == 0, dist_to_minus, dist_to_plus)
-    
+
     # Contrastive loss: minimize correct_dist, maximize incorrect_dist up to margin
     loss = torch.mean(mask * (correct_dist + torch.relu(margin - incorrect_dist)))
-    
+
     return loss
