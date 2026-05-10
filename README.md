@@ -6,22 +6,17 @@ This is the R package fork of TiRank, as an extension for [SigBridgeR](https://g
 [![R-CMD-check](https://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svghttps://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svghttps://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Exceret/TiRank/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-To install
 
-```r
-pak::pkg_install("Exceret/rTiRank")
-```
-
-prepare an env before loading this package:
+prepare an env before installing this package, because `tirank` is only available on bioconda:
 
 ```bash
-conda create -n tirank python=3.9
-conda activate tirank
+conda create -n r-reticulate-tirank python=3.9
+conda activate r-reticulate-tirank
 conda install -c bioconda -c conda-forge tirank leidenalg python-igraph
 ```
 
 ```r
-reticulcate::use_condaenv("tirank")
+pak::pkg_install("Exceret/rTiRank")
 ```
 
 <img src="./docs/source/_static/TiRank_white.png" alt="TiRank Logo" width="50%" />
