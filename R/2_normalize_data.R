@@ -37,7 +37,7 @@ normalize_data <- function(exp, ...) {
 
   normalized_exp <- sweep(centered, 1, rsd, "/")
   normalized_exp[
-    complete.cases(normalized_exp),
+    stats::complete.cases(normalized_exp),
     ,
     drop = FALSE
   ]

@@ -154,13 +154,15 @@ run_tirank_model <- function(
 }
 
 
-#' Get default GPextractor parameters
+#' @title Get default GPextractor parameters
 #'
 #' @param user_list A named list of user-provided parameters to override defaults
 #'
 #' @return A list of parameters for GPextractor with user overrides applied
 #'
 #' @export
+#' @family TiRank_params
+#'
 get_default_gpextractor_params <- function(user_list = NULL) {
   default <- list(
     top_var_genes = 2000L,
@@ -172,13 +174,13 @@ get_default_gpextractor_params <- function(user_list = NULL) {
   utils::modifyList(default, user_list)
 }
 
-#' Get Default Model Parameters
+#' @title Get Default Model Parameters
 #'
 #' @param user_list A list of user-specified parameters to override defaults. If NULL, only default parameters are returned.
 #'
 #' @return A list containing the complete model parameters with user overrides applied.
 #'
-#' @export
+#'
 #'
 #' @description
 #' Returns the default hyperparameters for the TiRank model. The defaults include:
@@ -197,7 +199,8 @@ get_default_gpextractor_params <- function(user_list = NULL) {
 #'   \item{do_reject}{Whether to perform rejection sampling (default: TRUE)}
 #'   \item{tolerance}{Tolerance threshold for rejection sampling (default: 0.05)}
 #' }
-#'
+#' @export
+#' @family TiRank_params
 get_default_model_params <- function(user_list = NULL) {
   default <- list(
     nhead = 2L,
@@ -237,7 +240,7 @@ get_default_model_params <- function(user_list = NULL) {
 #'     \item 2_preprocessing/scAnndata.pkl
 #'   }
 #'
-#' @keywords internal
+#' @export
 save_data <- function(
   sc_data,
   bulk_exp_train,

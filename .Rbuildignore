@@ -6,3 +6,7 @@
 ^[.]?air[.]toml$
 ^\.vscode$
 ^\.github$
+ExampleData/
+ExampleData
+s\.r
+^\.nfs

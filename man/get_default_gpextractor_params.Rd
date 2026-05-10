@@ -15,3 +15,8 @@ A list of parameters for GPextractor with user overrides applied
 \description{
 Get default GPextractor parameters
 }
+\seealso{
+Other TiRank_params: 
+\code{\link{get_default_model_params}()}
+}
+\concept{TiRank_params}

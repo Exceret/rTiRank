@@ -30,3 +30,8 @@ Returns the default hyperparameters for the TiRank model. The defaults include:
 \item{tolerance}{Tolerance threshold for rejection sampling (default: 0.05)}
 }
 }
+\seealso{
+Other TiRank_params: 
+\code{\link{get_default_gpextractor_params}()}
+}
+\concept{TiRank_params}

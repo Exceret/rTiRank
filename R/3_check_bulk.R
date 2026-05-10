@@ -38,8 +38,13 @@ check_bulk <- function(bulk_exp, bulk_clinical, save_path = NULL, ...) {
   bulk_clinical <- bulk_clinical[common_elements, , drop = FALSE]
 
   if (!is.null(save_path)) {
+    dir.create(
+      file.path(save_path, "1_loaddata"),
+      recursive = TRUE,
+      showWarnings = FALSE
+    )
     pickle_dump(
-      bulk_exp,
+      as.data.frame(bulk_exp),
       file.path(
         save_path,
         "1_loaddata",
