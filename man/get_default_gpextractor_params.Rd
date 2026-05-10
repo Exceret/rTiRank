@@ -20,3 +20,4 @@ Other TiRank_params:
 \code{\link{get_default_model_params}()}
 }
 \concept{TiRank_params}
+\keyword{internal}

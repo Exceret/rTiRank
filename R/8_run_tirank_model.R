@@ -160,7 +160,7 @@ run_tirank_model <- function(
 #'
 #' @return A list of parameters for GPextractor with user overrides applied
 #'
-#' @export
+#' @keywords internal
 #' @family TiRank_params
 #'
 get_default_gpextractor_params <- function(user_list = NULL) {
@@ -199,7 +199,7 @@ get_default_gpextractor_params <- function(user_list = NULL) {
 #'   \item{do_reject}{Whether to perform rejection sampling (default: TRUE)}
 #'   \item{tolerance}{Tolerance threshold for rejection sampling (default: 0.05)}
 #' }
-#' @export
+#' @keywords internal
 #' @family TiRank_params
 get_default_model_params <- function(user_list = NULL) {
   default <- list(

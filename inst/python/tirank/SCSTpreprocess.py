@@ -13,6 +13,7 @@ from scipy.stats import zscore
 # unbalanced
 from imblearn.over_sampling import SMOTE, RandomOverSampler
 from imblearn.under_sampling import RandomUnderSampler, TomekLinks
+from ts_print import ts_print
 
 """
 Preprocessing utilities for scRNA-seq and ST data using Scanpy.
@@ -46,8 +47,9 @@ def merge_datasets(bulkClinical_1, bulkClinical_2, bulkExp_1, bulkExp_2):
     intersectGenes = genes1.intersection(genes2)
 
     if len(intersectGenes) == 0:
-        print(
-            "The length of interaction genes between these two bulk RNA-seq datasets was zero!"
+        ts_print(
+            "The length of interaction genes between these two bulk RNA-seq datasets was zero!",
+            symbol="error"
         )
         return 0
 
@@ -140,7 +142,7 @@ def    perform_sampling_on_RNAseq(savePath, mode="SMOTE", threshold=0.5):
 
     # Ensure classes are imbalanced before any action
     if not is_imbalanced(bulkClinical, threshold):
-        print("Classes are balanced!")
+        ts_print("Classes are balanced!",symbol="info")
         return bulkExp, bulkClinical
 
     X = bulkExp.T.values
@@ -404,6 +406,6 @@ def calculate_populations_meanRank(input_data, category):
     # Now group by the 'Category' column and find the mean of each group
     meanrank_df = input_data_combined.groupby("Category").mean()
 
-    print(f"Cell subpopulation mean feature calculation done!")
+    ts_print("Cell subpopulation mean feature calculation done!",symbol = "success")
 
     return meanrank_df

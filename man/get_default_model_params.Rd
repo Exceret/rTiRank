@@ -35,3 +35,4 @@ Other TiRank_params:
 \code{\link{get_default_gpextractor_params}()}
 }
 \concept{TiRank_params}
+\keyword{internal}
