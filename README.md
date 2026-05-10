@@ -12,6 +12,18 @@ To install
 pak::pkg_install("Exceret/rTiRank")
 ```
 
+prepare an env before loading this package:
+
+```bash
+conda create -n tirank python=3.9
+conda activate tirank
+conda install -c bioconda -c conda-forge tirank leidenalg python-igraph
+```
+
+```r
+reticulcate::use_condaenv("tirank")
+```
+
 <img src="./docs/source/_static/TiRank_white.png" alt="TiRank Logo" width="50%" />
 
 | | |

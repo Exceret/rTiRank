@@ -19,6 +19,14 @@
     "pickle"
   ))
 
+  assign("model", reticulate::import("tirank.Model"), envir = topenv())
+
+  assign(
+    "scst_preprocess",
+    reticulate::import("tirank.SCSTpreprocess"),
+    envir = topenv()
+  )
+
   invisible()
 }
 
@@ -26,8 +34,4 @@
 #' @keywords internal
 ts_cli <- SigBridgeRUtils::CreateTimeStampCliEnv()
 
-model <- reticulate::import("tirank.Model")
-
 pickle <- reticulate::import("pickle")
-
-scst_preprocess <- reticulate::import("tirank.SCSTpreprocess")
