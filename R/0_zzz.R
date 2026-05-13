@@ -40,11 +40,17 @@
     ),
     envir = topenv()
   )
-
   assign(
     "scst_preprocess",
     reticulate::py_run_file(
       system.file("python/tirank/SCSTpreprocess.py", package = "rTiRank")
+    ),
+    envir = topenv()
+  )
+  assign(
+    "scst_preprocess",
+    reticulate::py_run_file(
+      system.file("python/tirank/Imageprocessing.py", package = "rTiRank")
     ),
     envir = topenv()
   )

@@ -7,7 +7,6 @@
 #' @param bulk_clinical_val Validation bulk clinical data (data.frame)
 #' @param save_dir Directory path to save model and intermediate results
 #' @param device Device to use for model training, either "cuda" or "cpu"
-#' @param load_cache Whether to use existing data in `save_dir` instead of overwriting it.
 #' @param gpextractor_params List of parameters for gene pair extraction
 #' \describe{
 #'   \item{top_var_genes}{Number of top variable genes to select}
@@ -49,7 +48,7 @@
 #'
 #'
 #' @export
-run_tirank_model <- function(
+run_sc_tirank_model <- function(
   seurat,
   bulk_exp_train,
   bulk_clinical_train,
@@ -57,7 +56,6 @@ run_tirank_model <- function(
   bulk_clinical_val,
   save_dir = "./TiRank_res",
   device = c("cuda", "cpu"),
-  load_cache = FALSE,
   gpextractor_params = list(
     top_var_genes = 2000L,
     top_gene_pairs = 1000L,
@@ -138,17 +136,15 @@ run_tirank_model <- function(
   py_env$savePath <- save_dir
   py_env$device <- device
 
-  if (!load_cache) {
-    save_data(
-      sc_data = seurat,
-      bulk_exp_train = bulk_exp_train,
-      bulk_clinical_train = bulk_clinical_train,
-      bulk_exp_val = bulk_exp_val,
-      bulk_clinical_val = bulk_clinical_val,
-      save_dir = save_dir,
-      assay = assay
-    )
-  }
+  save_data(
+    sc_data = seurat,
+    bulk_exp_train = bulk_exp_train,
+    bulk_clinical_train = bulk_clinical_train,
+    bulk_exp_val = bulk_exp_val,
+    bulk_clinical_val = bulk_clinical_val,
+    save_dir = save_dir,
+    assay = assay
+  )
 
   reticulate::py_run_file(sc_response_file) # see `0_zzz.R`
 }
