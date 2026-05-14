@@ -56,7 +56,7 @@ get_patho_class <- function(
   py_env$image_save_path <- image_save_path
   py_env$savePath <- save_dir
 
-  py_run_file(system.file(
+  reticulate::py_run_file(system.file(
     "python/Example/get_patho_class.py",
     package = "rTiRank"
   ))

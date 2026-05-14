@@ -141,6 +141,7 @@ run_st_tirank_model <- function(
 
   gpextractor_params <- get_default_gpextractor_params(gpextractor_params)
   model_params <- get_default_model_params(model_params)
+  hub_params <- get_default_hub_params(hub_params)
 
   if (!dir.exists(save_dir)) {
     dir.create(save_dir, recursive = TRUE)
@@ -149,13 +150,14 @@ run_st_tirank_model <- function(
   py_env <- reticulate::py
 
   py_env$anndata <- anndataR::as_AnnData(
-    sc_data,
+    seurat,
     x_mapping = "data",
     output_class = "ReticulateAnnData",
     assay_name = assay
   )
   py_env$model_params <- reticulate::r_to_py(model_params)
   py_env$gpextractor_params <- gpextractor_params
+  py_env$hub_params <- hub_params
   py_env$savePath <- save_dir
   py_env$device <- device
 
@@ -172,8 +174,10 @@ run_st_tirank_model <- function(
   reticulate::py_run_file(sc_response_file) # see `0_zzz.R`
 }
 
+
+
 #' @keywords internal
-get_hub_params <- function(user_list = NULL) {
+get_default_hub_params <- function(user_list = NULL) {
   default <- list(
     cateCol1 = "patho_class", # First categorical column (e.g., pathological class)
     cateCol2 = "leiden_clusters", # Second categorical column (e.g., clustering result)

@@ -60,4 +60,4 @@
 
 ts_cli <- SigBridgeRUtils::CreateTimeStampCliEnv()
 
-pickle <- reticulate::import("pickle")
+pickle <- reticulate::import("pickle", delay_load = TRUE)
