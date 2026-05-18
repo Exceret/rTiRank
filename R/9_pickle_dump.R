@@ -8,6 +8,9 @@ pickle_dump <- function(x, save_path = NULL) {
   if (is.null(save_path)) {
     save_path <- "./"
   }
+  if (dir.exists(dirname(save_path))) {
+    dir.create(dirname(save_path), recursive = TRUE, showWarnings = FALSE)
+  }
   py_env <- reticulate::py
   py_env$TRANSFER_FROM_R <- reticulate::r_to_py(x)
   reticulate::py_run_string(sprintf(

@@ -11,4 +11,5 @@ __pycache__/
 *.pkl
 test*
 *ExampleData/**
-s.r
+*.log
+TiRank_res/
