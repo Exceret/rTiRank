@@ -2,6 +2,8 @@
 import os
 import pickle
 import math
+import numpy as np
+import random
 
 from collections import Counter
 
