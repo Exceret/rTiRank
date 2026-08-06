@@ -6,6 +6,7 @@ import os, pickle
 
 from lifelines import CoxPHFitter
 from scipy.stats import pearsonr, ttest_ind
+
 # from statsmodels.stats.multitest import multipletests
 
 from .Dataloader import transform_test_exp
@@ -77,7 +78,7 @@ class GenePairExtractor:
         Returns:
             None
         """
-        ts_print("Starting load data for gene pair transformation", symbol="info")
+        ts_print("Loading data for gene pair transformation", symbol="info")
         savePath_2 = os.path.join(self.savePath, "2_preprocessing")
         savePath_splitData = os.path.join(savePath_2, "split_data")
 
@@ -117,7 +118,7 @@ class GenePairExtractor:
         Returns:
             None
         """
-        ts_print("Starting save gene pair matrices", symbol="info")
+        ts_print("Saving gene pair matrices", symbol="info")
         savePath_2 = os.path.join(self.savePath, "2_preprocessing")
         savePath_splitData = os.path.join(savePath_2, "split_data")
 
@@ -197,16 +198,14 @@ class GenePairExtractor:
         if self.analysis_mode == "Classification":
             regulated_genes_r, regulated_genes_p = self.calculate_binomial_gene_pairs()
             ts_print(
-                f"There are {len(regulated_genes_r)} genes up-regulated in Group 0 \
-                    and {len(regulated_genes_p)} genes up-regulated in Group 1.",
+                f"There are {len(regulated_genes_r)} genes up-regulated in Group 0 and {len(regulated_genes_p)} genes up-regulated in Group 1.",
                 symbol="info",
             )
 
         elif self.analysis_mode == "Cox":
             regulated_genes_r, regulated_genes_p = self.calculate_survival_gene_pairs()
             ts_print(
-                f"There are {len(regulated_genes_r)} Risk genes \
-                    and {len(regulated_genes_p)} Protective genes.",
+                f"There are {len(regulated_genes_r)} Risk genes and {len(regulated_genes_p)} Protective genes.",
                 symbol="info",
             )
 
@@ -228,7 +227,7 @@ class GenePairExtractor:
                 "A set of genes is empty. Try increasing the 'top_var_genes' value or loosening the 'p.value' threshold."
             )
 
-        ts_print("Get candidate gene pairs done.", symbol="success")
+        ts_print("Candidate gene pairs extracted.", symbol="success")
 
         # Transform the bulk gene pairs
         bulk_gene_pairs = self.transform_bulk_gene_pairs(

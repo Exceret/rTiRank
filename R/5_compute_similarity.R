@@ -76,7 +76,7 @@ compute_similarity <- function(
 
     if (!is.null(save_path)) {
       pickle_dump(
-        adjacency_matrix,
+        reticulate::r_to_py(adjacency_matrix),
         save_path = file.path(save_path, "distance_df.pkl")
       )
     }
@@ -86,7 +86,7 @@ compute_similarity <- function(
 
   if (!is.null(save_path)) {
     pickle_dump(
-      cell_cell_similarity,
+      reticulate::r_to_py(cell_cell_similarity),
       save_path = file.path(save_path, "2_preprocessing", "similarity_df.pkl")
     )
   }

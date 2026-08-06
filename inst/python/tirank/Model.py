@@ -11,8 +11,8 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-from Loss import *
-from ts_print import ts_print
+from .Loss import *
+from .ts_print import ts_print
 
 # Initial
 """

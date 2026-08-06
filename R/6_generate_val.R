@@ -47,7 +47,7 @@ generate_val <- function(
 
   validx <- sample(seq_len(nrow_combined), num_val)
 
-  combined_val = combined[validx, ]
+  combined_val <- combined[validx, ]
   combined_train <- combined[-validx, ]
   names_val <- names_combined[validx]
   names_train <- names_combined[-validx]
@@ -79,19 +79,19 @@ generate_val <- function(
   if (!is.null(save_path)) {
     save_path_2 <- file.path(save_path, "2_preprocessing", "split_data")
     pickle_dump(
-      bulk_exp_train,
+      reticulate::r_to_py(bulk_exp_train),
       file.path(save_path_2, "bulkExp_train.pkl")
     )
     pickle_dump(
-      bulk_clinical_train,
+      reticulate::r_to_py(bulk_clinical_train),
       file.path(save_path_2, "bulkClinical_train.pkl")
     )
     pickle_dump(
-      bulk_exp_val,
+      reticulate::r_to_py(bulk_exp_val),
       file.path(save_path_2, "bulkExp_val.pkl")
     )
     pickle_dump(
-      bulk_clinical_val,
+      reticulate::r_to_py(bulk_clinical_val),
       file.path(save_path_2, "bulkClinical_val.pkl")
     )
   }

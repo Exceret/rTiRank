@@ -22,5 +22,5 @@ setup_seed <- function(seed = 123L, ...) {
     but got a {.cls {class(seed)}}"
     ))
   }
-  model$setup_seed(seed)
+  tirank$setup_seed(seed)
 }

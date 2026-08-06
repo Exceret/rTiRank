@@ -1,10 +1,4 @@
-# test_that("it works", {
-usethis::proj_activate(".")
-setwd("tests/testthat")
 library(magrittr)
-
-reticulate::use_condaenv("r-reticulate-tirank")
-devtools::document("../..")
 
 data_path <- "/data/resource/wanglab/SigBridgeR/benchmark_data/lung"
 
@@ -26,10 +20,14 @@ pheno <- qs::qread(
 )
 sample_names <- pheno$sample %>% gsub(".*-", "", .)
 sample_names_tumor_only <- sample_names[sample_names %in% c("01", "11")]
-pheno_bi <- SigBridgeR::PhenoMap(sample_names, v == "01" ~ 1, v == "11" ~ 0)
+pheno_bi <- SigBridgeR::PhenoMap(
+  sample_names,
+  sample_names == "01" ~ 1,
+  sample_names == "11" ~ 0
+)
 names(pheno_bi) <- pheno$sample
 
-bulk %>% head()
+bulk[1:4, 1:4]
 
 # -------------------------------------------------------------------------------------------------------
 bulkExp <- normalize_data(bulk)
@@ -43,7 +41,7 @@ val_res <- generate_val(
   check_res$bulk_clinical,
   validation_proportion = 0.15,
   mode = c("Classification"),
-  seed = 123L,
+  seed = 123L
 )
 
 sampling_res <- perform_sampling_on_RNAseq(
@@ -113,4 +111,3 @@ final_res <- run_tirank_model(
     package = "rTiRank"
   )
 )
-# })

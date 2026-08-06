@@ -29,7 +29,7 @@ perform_sampling_on_RNAseq <- function(
   bulk_clinical_train,
   mode = c("smote", "downsample", "upsample", "tomeklinks"),
   threshold = 0.5,
-  seed = 123L,
+  seed = SigBridgeRUtils::getFuncOption("seed") %||% 123L,
   ...
 ) {
   rlang::check_dots_empty0()
@@ -55,10 +55,10 @@ perform_sampling_on_RNAseq <- function(
 
   sampler <- switch(
     mode,
-    "smote" = scst_preprocess$SMOTE(random_state = seed),
-    "downsample" = scst_preprocess$RandomUnderSampler(random_state = seed),
-    "upsample" = scst_preprocess$RandomOverSampler(random_state = seed),
-    "tomeklinks" = scst_preprocess$TomekLinks()
+    "smote" = tirank$SMOTE(random_state = seed),
+    "downsample" = tirank$RandomUnderSampler(random_state = seed),
+    "upsample" = tirank$RandomOverSampler(random_state = seed),
+    "tomeklinks" = tirank$TomekLinks()
   )
 
   x_res <- NULL

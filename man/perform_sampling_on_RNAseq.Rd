@@ -9,7 +9,7 @@ perform_sampling_on_RNAseq(
   bulk_clinical_train,
   mode = c("smote", "downsample", "upsample", "tomeklinks"),
   threshold = 0.5,
-  seed = 123L,
+  seed = SigBridgeRUtils::getFuncOption("seed") \%||\% 123L,
   ...
 )
 }

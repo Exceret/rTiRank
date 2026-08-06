@@ -44,7 +44,7 @@ check_bulk <- function(bulk_exp, bulk_clinical, save_path = NULL, ...) {
       showWarnings = FALSE
     )
     pickle_dump(
-      as.data.frame(bulk_exp),
+      reticulate::r_to_py(as.data.frame(bulk_exp)),
       file.path(
         save_path,
         "1_loaddata",
@@ -52,7 +52,7 @@ check_bulk <- function(bulk_exp, bulk_clinical, save_path = NULL, ...) {
       )
     )
     pickle_dump(
-      bulk_clinical,
+      reticulate::r_to_py(bulk_clinical),
       file.path(
         save_path,
         "1_loaddata",

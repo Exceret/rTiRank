@@ -263,34 +263,31 @@ save_data <- function(
     recursive = TRUE,
     showWarnings = FALSE
   )
-  py_env <- reticulate::py
   pickle_dump(
-    x = bulk_exp_train,
+    reticulate::r_to_py(bulk_exp_train),
     file.path(save_dir, "2_preprocessing/split_data/bulkExp_train.pkl")
   )
   pickle_dump(
-    x = bulk_clinical_train,
+    reticulate::r_to_py(bulk_clinical_train),
     file.path(save_dir, "2_preprocessing/split_data/bulkClinical_train.pkl")
   )
   pickle_dump(
-    x = bulk_exp_val,
+    reticulate::r_to_py(bulk_exp_val),
     file.path(save_dir, "2_preprocessing/split_data/bulkExp_val.pkl")
   )
   pickle_dump(
-    x = bulk_clinical_val,
+    reticulate::r_to_py(bulk_clinical_val),
     file.path(save_dir, "2_preprocessing/split_data/bulkClinical_val.pkl")
   )
-
-  py_env$anndata <- anndataR::as_AnnData(
-    sc_data,
-    x_mapping = "data",
-    output_class = "ReticulateAnnData",
-    assay_name = assay
+  pickle_dump(
+    obj = anndataR::as_AnnData(
+      sc_data,
+      x_mapping = "data",
+      output_class = "ReticulateAnnData",
+      assay_name = assay
+    ),
+    file.path(save_dir, "2_preprocessing/scAnndata.pkl")
   )
 
-  reticulate::py_run_string(sprintf(
-    "with open('%s', 'wb') as f:\n\tpickle.dump(anndata, f)",
-    file.path(save_dir, "2_preprocessing/scAnndata.pkl")
-  ))
-  invisible()
+  invisible(TRUE)
 }

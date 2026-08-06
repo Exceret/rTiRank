@@ -13,4 +13,4 @@ test*
 *ExampleData/**
 *.log
 TiRank_res/
-Example_sc.R
+.codebuddy/

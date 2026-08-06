@@ -1,17 +1,9 @@
 """Example for integrate single-cell RNA-seq data of melanoma and response information"""
 
-import warnings
-
-
-# import torch
-# import pickle
 import os
-
-# from tirank.Model import setup_seed, initial_model_para
+import warnings
 from tirank.Model import initial_model_para
 from tirank.GPextractor import GenePairExtractor
-
-# from tirank.Dataloader import generate_val, PackData
 from tirank.Dataloader import PackData
 from tirank.TrainPre import tune_hyperparameters, Predict
 
@@ -25,7 +17,7 @@ device: str = globals().get("device")
 gpextractor_params: dict = globals().get("gpextractor_params")
 model_params: dict = globals().get("model_params")
 
-mode: str = model_params.get("mode") # * analysis_mode
+mode: str = model_params.get("mode")  # * analysis_mode
 infer_mode: str = model_params.get("infer_mode")
 encoder_type: str = model_params.get("encoder_type")
 

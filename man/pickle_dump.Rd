@@ -4,10 +4,17 @@
 \alias{pickle_dump}
 \title{Save R object to a Python pickle file}
 \usage{
-pickle_dump(x, save_path = NULL)
+pickle_dump(
+  obj,
+  save_path = NULL,
+  protocol = NULL,
+  ...,
+  fix_imports = TRUE,
+  buffer_callback = NULL
+)
 }
 \arguments{
-\item{x}{An R object to be serialized and saved. It must be transferrable to Python.}
+\item{obj}{An R object to be serialized and saved. It must be transferrable to Python.}
 
 \item{save_path}{Character string specifying the file path where the pickle file will be saved. Defaults to "./"}
 }

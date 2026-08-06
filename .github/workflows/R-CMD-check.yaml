@@ -41,8 +41,12 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck local::.
           needs: check
+
+      - run: |
+          library(mypackage)      # <-- declare requirements in .onLoad()
+          reticulate::py_config() # <-- resolves the ephemeral python environment
 
       - uses: r-lib/actions/check-r-package@v2
         with:

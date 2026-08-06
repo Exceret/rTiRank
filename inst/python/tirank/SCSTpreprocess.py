@@ -13,7 +13,7 @@ from scipy.stats import zscore
 # unbalanced
 from imblearn.over_sampling import SMOTE, RandomOverSampler
 from imblearn.under_sampling import RandomUnderSampler, TomekLinks
-from ts_print import ts_print
+from .ts_print import ts_print
 
 """
 Preprocessing utilities for scRNA-seq and ST data using Scanpy.
