@@ -31,8 +31,8 @@ Returns the default hyperparameters for the TiRank model. The defaults include:
 }
 }
 \seealso{
-Other TiRank_params: 
-\code{\link{get_default_gpextractor_params}()}
+Other TiRank_params:
+\code{\link[=get_default_gpextractor_params]{get_default_gpextractor_params()}}
 }
 \concept{TiRank_params}
 \keyword{internal}
