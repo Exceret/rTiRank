@@ -46,10 +46,6 @@ jobs:
             local::.
           needs: check
 
-      - run: |
-          library(rTiRank)      # <-- declare requirements in .onLoad()
-          reticulate::py_config() # <-- resolves the ephemeral python environment
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
