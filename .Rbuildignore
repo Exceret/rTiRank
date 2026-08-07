@@ -8,8 +8,9 @@
 ^\.github$
 ExampleData/
 ExampleData
-s\.r
 ^\.nfs
 ^Example_sc\.R
-TiRank_res/
-^\.codebuddy/
+TiRank_res/*
+^\.codebuddy/*
+.*\.log
+.*\.pkl

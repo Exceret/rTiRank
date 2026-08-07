@@ -1,5 +1,8 @@
 library(magrittr)
 
+# reticulate::use_condaenv("r-reticulate-tirank")
+# devtools::document()
+
 data_path <- "/data/resource/wanglab/SigBridgeR/benchmark_data/lung"
 
 seurat <- qs::qread(
@@ -47,7 +50,7 @@ val_res <- generate_val(
 sampling_res <- perform_sampling_on_RNAseq(
   val_res$bulk_exp_train,
   val_res$bulk_clinical_train,
-  mode = c("SMOTE"),
+  mode = "SMOTE",
   threshold = 0.5
 )
 
@@ -58,6 +61,7 @@ cell_cell_distance <- compute_similarity(
   save_path = "TiRank_res"
 )
 
+# TRUE
 final_res <- run_tirank_model(
   seurat = seurat,
   bulk_exp_train = as.data.frame(sampling_res$bulk_exp_resampled),

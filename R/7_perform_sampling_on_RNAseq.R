@@ -74,6 +74,7 @@ perform_sampling_on_RNAseq <- function(
 
   bulk_clinical_resampled <- as.data.frame(y_res)
   rownames(bulk_clinical_resampled) <- samples_order
+  colnames(bulk_clinical_resampled) <- "bulk_clinical_val"
 
   list(
     bulk_exp_resampled = bulk_exp_resampled,

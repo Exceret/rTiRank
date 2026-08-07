@@ -150,7 +150,7 @@ run_tirank_model <- function(
     )
   }
 
-  reticulate::py_run_file(sc_response_file) # see `0_zzz.R`
+  reticulate::py_run_file(sc_response_file)
 }
 
 
@@ -251,6 +251,7 @@ save_data <- function(
   assay = "RNA",
   ...
 ) {
+  rlang::check_installed("anndataR")
   stopifnot(
     is.data.frame(bulk_exp_train),
     is.data.frame(bulk_clinical_train),

@@ -17,6 +17,20 @@ pickle_dump(
 \item{obj}{An R object to be serialized and saved. It must be transferrable to Python.}
 
 \item{save_path}{Character string specifying the file path where the pickle file will be saved. Defaults to "./"}
+
+\item{protocol}{The optional \emph{protocol} argument tells the pickler to use the given protocol;
+supported protocols are 0, 1, 2, 3, 4 and 5. The default protocol is 4.
+It was introduced in Python 3.4, and is incompatible with previous versions.}
+
+\item{...}{pass to python function \code{pickle.dump()}}
+
+\item{fix_imports}{If \emph{fix_imports} is TRUE and protocol is less than 3,
+pickle will try to map the new Python 3 names to the old module names used in Python2,
+so that the pickle data stream is readable with Python 2.}
+
+\item{buffer_callback}{If \emph{buffer_callback} is NULL (the default), buffer views are serialized into
+\emph{file} as part of the pickle stream. It is an error if \emph{buffer_callback} is not NULL
+and \emph{protocol} is NULL or smaller than 5.}
 }
 \value{
 Invisible \code{TRUE} The function is called for its side effect of saving the file

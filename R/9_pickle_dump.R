@@ -2,6 +2,16 @@
 #'
 #' @param obj An R object to be serialized and saved. It must be transferrable to Python.
 #' @param save_path Character string specifying the file path where the pickle file will be saved. Defaults to "./"
+#' @param protocol The optional *protocol* argument tells the pickler to use the given protocol;
+#'   supported protocols are 0, 1, 2, 3, 4 and 5. The default protocol is 4.
+#'   It was introduced in Python 3.4, and is incompatible with previous versions.
+#' @param ... pass to python function `pickle.dump()`
+#' @param fix_imports If *fix_imports* is TRUE and protocol is less than 3,
+#'   pickle will try to map the new Python 3 names to the old module names used in Python2,
+#'   so that the pickle data stream is readable with Python 2.
+#' @param buffer_callback If *buffer_callback* is NULL (the default), buffer views are serialized into
+#'   *file* as part of the pickle stream. It is an error if *buffer_callback* is not NULL
+#'   and *protocol* is NULL or smaller than 5.
 #' @return Invisible `TRUE` The function is called for its side effect of saving the file
 #' @export
 pickle_dump <- function(
